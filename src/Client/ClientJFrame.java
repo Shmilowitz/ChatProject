@@ -18,8 +18,8 @@ import java.util.logging.Logger;
  */
 public class ClientJFrame extends javax.swing.JFrame implements Observer {
 
-  ArrayList<String> clientList = new ArrayList<String>();
-  
+    ArrayList<String> clientList = new ArrayList<String>();
+
     public ClientJFrame(Client c) {
         initComponents();
         c.addObserver(this);
@@ -186,7 +186,7 @@ public class ClientJFrame extends javax.swing.JFrame implements Observer {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ClientJFrame().setVisible(true);
+                new ClientJFrame(new Client(null,0)).setVisible(true);
             }
         });
     }
@@ -223,16 +223,16 @@ public class ClientJFrame extends javax.swing.JFrame implements Observer {
         switch (cmd) {
             case "USERS":
                 String users = line.substring(n + 1);
+
                 
-                stop = true;
                 break;
             case "MESSAGE":
                 String res = line.substring(n + 1);
                 int n2 = res.indexOf("#");
                 String recep = res.substring(0, n2);
                 String msg = res.substring(n2 + 1);
-                Logger.getLogger(Log.LOG_NAME).log(Level.INFO, name + " is sending message: '" + msg + "' to: " + recep);
-                server.msgClient(this, msg, findRecepFromString(recep));
+                
+                
                 break;
         }
     }
