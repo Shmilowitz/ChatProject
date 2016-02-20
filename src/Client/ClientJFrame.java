@@ -7,8 +7,14 @@ package Client;
 
 import Shared.Log;
 import java.awt.Frame;
+import java.io.IOException;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 
@@ -19,18 +25,17 @@ import javax.swing.JFrame;
 public class ClientJFrame extends javax.swing.JFrame implements Observer {
 
     String name;
-    
+
     Client c;
     DefaultListModel<String> model = new DefaultListModel<>();
 
     public ClientJFrame(Client c) {
         this.c = c;
-        Frame[] frames = JFrame.getFrames();
-        frames[0].setTitle(c.ip);
+
         initComponents();
         c.addObserver(this);
 
-        jList1.setModel(model);
+        clientArea.setModel(model);
 
     }
 
@@ -46,17 +51,20 @@ public class ClientJFrame extends javax.swing.JFrame implements Observer {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        userField = new javax.swing.JTextField();
+        conBtn = new javax.swing.JButton();
+        discBtn = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
+        sendBtn = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        logArea = new javax.swing.JTextArea();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        clientArea = new javax.swing.JList();
+        msgField = new javax.swing.JTextField();
+        ipField = new javax.swing.JTextField();
+        portField = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -66,46 +74,56 @@ public class ClientJFrame extends javax.swing.JFrame implements Observer {
 
         jLabel1.setText("Username");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        userField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                userFieldActionPerformed(evt);
             }
         });
 
-        jButton1.setText("Connect");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        conBtn.setText("Connect");
+        conBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                conBtnActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Disconnect");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        discBtn.setText("Disconnect");
+        discBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                discBtnActionPerformed(evt);
             }
         });
 
         jLabel2.setText("Online Users");
 
-        jButton3.setText("Send");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        sendBtn.setText("Send");
+        sendBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                sendBtnActionPerformed(evt);
             }
         });
 
-        jTextArea3.setColumns(20);
-        jTextArea3.setRows(5);
-        jTextArea3.setFocusable(false);
-        jScrollPane3.setViewportView(jTextArea3);
+        logArea.setColumns(20);
+        logArea.setRows(5);
+        logArea.setFocusable(false);
+        jScrollPane2.setViewportView(logArea);
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jTextArea2.setFocusable(false);
-        jScrollPane2.setViewportView(jTextArea2);
+        jScrollPane4.setViewportView(clientArea);
 
-        jScrollPane4.setViewportView(jList1);
+        msgField.setFocusable(false);
+        msgField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                msgFieldActionPerformed(evt);
+            }
+        });
+
+        ipField.setText("kristian3.cloudapp.net");
+
+        portField.setText("9090");
+
+        jLabel3.setText("IP");
+
+        jLabel4.setText("Port");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -113,81 +131,143 @@ public class ClientJFrame extends javax.swing.JFrame implements Observer {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(msgField)
+                        .addGap(31, 31, 31)
+                        .addComponent(sendBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(userField)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(ipField, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel4)
+                                .addGap(28, 28, 28)
+                                .addComponent(portField, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(conBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(discBtn))
                     .addComponent(jScrollPane2))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(60, 60, 60)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(62, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addGap(33, 33, 33))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2))
-                .addGap(19, 19, 19)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane3)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ipField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(portField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(userField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1)
+                            .addComponent(conBtn)
+                            .addComponent(discBtn)))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(msgField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sendBtn)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane4)))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void userFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userFieldActionPerformed
 
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_userFieldActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        name = jTextField1.getText();
-        String s = "USER#" + name;
-        c.send(s);
-        jTextField1.setFocusable(false);
-        jTextArea3.setFocusable(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void conBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_conBtnActionPerformed
+        if (ipField.getText() != null && portField.getText() != null && userField.getText() != null) {
+            new Thread(() -> {
+                String ip = ipField.getText();
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        String msg = jTextArea3.getText(); 
-        c.send(msg);
-        int n = msg.indexOf("#");
-        int n2 = msg.lastIndexOf("#");
-        String rec = msg.substring(n+1,n2);
-        String fin = name + "(" + rec + "): " + msg.substring(n2+1) + "\n";
-        jTextArea2.append(fin);
-        jTextArea3.setText("");
-    }//GEN-LAST:event_jButton3ActionPerformed
+                int port = Integer.parseInt(portField.getText());
+                try {
+                    c.connect(ip, port);
+                } catch (IOException ex) {
+                }
+            }).start();
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        c.send("LOGOUT#");
+            Frame[] frames = JFrame.getFrames();
+            frames[0].setTitle(ipField.getText());
+            msgField.setFocusable(true);
+
+            name = userField.getText();
+            String s = "USER#" + name;
+            try {
+                c.send(s);
+            } catch (InterruptedException ex) {
+            }
+            userField.setFocusable(false);
+            msgField.setFocusable(true);
+        }
+
+    }//GEN-LAST:event_conBtnActionPerformed
+
+    private void sendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendBtnActionPerformed
+        String msg = msgField.getText();
+        
+        try {
+            c.send(msg);
+        } catch (InterruptedException ex) {
+        }
+        String rec = "";
+        List<Object> recepients = clientArea.getSelectedValuesList();
+        if(recepients.isEmpty()) return;
+        for (Object o : recepients) {
+            rec += o.toString();
+            rec += ",";
+        }
+        rec = rec.substring(0, rec.length() - 1);
+        String line = "SEND#" + rec + "#" + msg;
+        try {
+            c.send(line);
+        } catch (InterruptedException ex) {
+        }
+        //String rec = msg.substring(n + 1, n2);
+        String logLine = name + "(" + rec + "): " + msg + "\n";
+        logArea.append(logLine);
+        logArea.setCaretPosition(logArea.getDocument().getLength());
+        msgField.setText("");
+    }//GEN-LAST:event_sendBtnActionPerformed
+
+    private void discBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discBtnActionPerformed
+        try {
+            c.send("LOGOUT#");
+        } catch (InterruptedException ex) {
+        }
         System.exit(0);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_discBtnActionPerformed
+
+    private void msgFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msgFieldActionPerformed
+        sendBtnActionPerformed(evt);
+    }//GEN-LAST:event_msgFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -219,26 +299,29 @@ public class ClientJFrame extends javax.swing.JFrame implements Observer {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ClientJFrame(new Client(null, 0)).setVisible(true);
+                new ClientJFrame(new Client()).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JList clientArea;
+    private javax.swing.JButton conBtn;
+    private javax.swing.JButton discBtn;
+    private javax.swing.JTextField ipField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JList jList1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextArea jTextArea3;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextArea logArea;
+    private javax.swing.JTextField msgField;
+    private javax.swing.JTextField portField;
+    private javax.swing.JButton sendBtn;
+    private javax.swing.JTextField userField;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -264,7 +347,7 @@ public class ClientJFrame extends javax.swing.JFrame implements Observer {
                 String recep = res.substring(0, n2);
                 String msg = res.substring(n2 + 1);
                 String fin = recep + ": " + msg + "\n";
-                jTextArea2.append(fin);
+                logArea.append(fin);
                 break;
         }
     }
@@ -281,5 +364,13 @@ public class ClientJFrame extends javax.swing.JFrame implements Observer {
             n = users.indexOf(",");
         }
         model.addElement(users);
+    }
+
+    public String getIp() {
+        return ipField.getText();
+    }
+
+    public int getPort() {
+        return Integer.parseInt(portField.getText());
     }
 }

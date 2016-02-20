@@ -13,6 +13,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Scanner;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -20,30 +22,33 @@ import java.util.Scanner;
  */
 public class Client extends Observable {
 
-    private static void lineHandler(String s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     Socket socket;
-    int port;
-    String ip;
     PrintWriter pw;
     Scanner scan;
     boolean running = true;
 
-    public Client(String ip, int port) {
-        this.ip = ip;
-        this.port = port;
+    public Client() {
+
     }
 
-    public void connect() throws UnknownHostException, IOException {
+    public void connect(String ip, int port) throws UnknownHostException, IOException {
+        
+        
         socket = new Socket(InetAddress.getByName(ip), port);
         
         pw = new PrintWriter(socket.getOutputStream(), true);
         scan = new Scanner(socket.getInputStream());
+        
+        while (true) {
+            receive();
+        }
     }
 
-    public void send(String s) {
+    public void send(String s) throws InterruptedException {
+        while(pw == null){
+            Thread.sleep(10);
+        }
         pw.println(s);
         System.out.println(s);
     }
@@ -64,30 +69,20 @@ public class Client extends Observable {
     }
 
     public static void main(String[] args) throws IOException {
-        String ip = "";
-        int port = 0;
         
-        if (args.length > 1) {
-            ip = args[0];
-            port = Integer.parseInt(args[1]);
-        }else{
-            ip = "kristian3.cloudapp.net";
-            port = 9090;
-        }
-
-        Client c = new Client(ip, port);
-        c.connect();
+        Client c = new Client();
+        
         Thread t1 = new Thread(new Runnable() {
 
             @Override
             public void run() {
                 ClientJFrame cjf = new ClientJFrame(c);
                 cjf.setVisible(true);
+                
             }
         });
         t1.start();
-        while (true) {
-            c.receive();
-        }
+        
+        
     }
 }
