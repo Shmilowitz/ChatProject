@@ -6,11 +6,11 @@
 package Client;
 
 import Shared.Log;
-import java.util.ArrayList;
+import java.awt.Frame;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 
 /**
  *
@@ -18,11 +18,20 @@ import java.util.logging.Logger;
  */
 public class ClientJFrame extends javax.swing.JFrame implements Observer {
 
-    ArrayList<String> clientList = new ArrayList<String>();
+    String name;
+    
+    Client c;
+    DefaultListModel<String> model = new DefaultListModel<>();
 
     public ClientJFrame(Client c) {
+        this.c = c;
+        Frame[] frames = JFrame.getFrames();
+        frames[0].setTitle(c.ip);
         initComponents();
         c.addObserver(this);
+
+        jList1.setModel(model);
+
     }
 
     /**
@@ -44,9 +53,9 @@ public class ClientJFrame extends javax.swing.JFrame implements Observer {
         jButton3 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextArea3 = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea2 = new javax.swing.JTextArea();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea4 = new javax.swing.JTextArea();
-        jScrollPane5 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
 
         jTextArea1.setColumns(20);
@@ -71,6 +80,11 @@ public class ClientJFrame extends javax.swing.JFrame implements Observer {
         });
 
         jButton2.setText("Disconnect");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Online Users");
 
@@ -83,13 +97,15 @@ public class ClientJFrame extends javax.swing.JFrame implements Observer {
 
         jTextArea3.setColumns(20);
         jTextArea3.setRows(5);
+        jTextArea3.setFocusable(false);
         jScrollPane3.setViewportView(jTextArea3);
 
-        jTextArea4.setColumns(20);
-        jTextArea4.setRows(5);
-        jScrollPane4.setViewportView(jTextArea4);
+        jTextArea2.setColumns(20);
+        jTextArea2.setRows(5);
+        jTextArea2.setFocusable(false);
+        jScrollPane2.setViewportView(jTextArea2);
 
-        jScrollPane5.setViewportView(jList1);
+        jScrollPane4.setViewportView(jList1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -97,7 +113,7 @@ public class ClientJFrame extends javax.swing.JFrame implements Observer {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -105,19 +121,21 @@ public class ClientJFrame extends javax.swing.JFrame implements Observer {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2)
-                        .addGap(75, 75, 75)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton2))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane4))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(62, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(22, Short.MAX_VALUE))
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,13 +149,12 @@ public class ClientJFrame extends javax.swing.JFrame implements Observer {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane3)
-                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jScrollPane5))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
+                .addGap(19, 19, 19)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane3)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -145,16 +162,32 @@ public class ClientJFrame extends javax.swing.JFrame implements Observer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        name = jTextField1.getText();
+        String s = "USER#" + name;
+        c.send(s);
+        jTextField1.setFocusable(false);
+        jTextArea3.setFocusable(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        String msg = jTextArea3.getText(); 
+        c.send(msg);
+        int n = msg.indexOf("#");
+        int n2 = msg.lastIndexOf("#");
+        String rec = msg.substring(n+1,n2);
+        String fin = name + "(" + rec + "): " + msg.substring(n2+1) + "\n";
+        jTextArea2.append(fin);
+        jTextArea3.setText("");
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        c.send("LOGOUT#");
+        System.exit(0);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -186,7 +219,7 @@ public class ClientJFrame extends javax.swing.JFrame implements Observer {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ClientJFrame(new Client(null,0)).setVisible(true);
+                new ClientJFrame(new Client(null, 0)).setVisible(true);
             }
         });
     }
@@ -199,12 +232,12 @@ public class ClientJFrame extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea3;
-    private javax.swing.JTextArea jTextArea4;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
@@ -223,17 +256,30 @@ public class ClientJFrame extends javax.swing.JFrame implements Observer {
         switch (cmd) {
             case "USERS":
                 String users = line.substring(n + 1);
-
-                
+                updateList(users);
                 break;
             case "MESSAGE":
                 String res = line.substring(n + 1);
                 int n2 = res.indexOf("#");
                 String recep = res.substring(0, n2);
                 String msg = res.substring(n2 + 1);
-                
-                
+                String fin = recep + ": " + msg + "\n";
+                jTextArea2.append(fin);
                 break;
         }
+    }
+
+    private void updateList(String users) {
+        model.removeAllElements();
+        if (users.length() == 0) {
+            return;
+        }
+        int n = users.indexOf(",");
+        while (n > 0) {
+            model.addElement(users.substring(0, n));
+            users = users.substring(n + 1);
+            n = users.indexOf(",");
+        }
+        model.addElement(users);
     }
 }

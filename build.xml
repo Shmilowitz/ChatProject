@@ -10,6 +10,7 @@
 <project name="CA-1" default="default" basedir=".">
     <target name="-post-compile">
         <copy file="startserver.bat" todir="${dist.dir}"/>
+        <copy file="startclient.bat" todir="${dist.dir}"/>
     </target>
     <description>Builds, tests, and runs the project CA-1.</description>
     <import file="nbproject/build-impl.xml"/>

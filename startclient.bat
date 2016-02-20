@@ -1,0 +1,1 @@
+java -cp CA-1.jar Client.Client kristian3.cloudapp.net 9090
